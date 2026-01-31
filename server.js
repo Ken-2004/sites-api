@@ -24,17 +24,15 @@ const HTTP_PORT = process.env.PORT || 8080;
 app.use(cors());
 app.use(express.json());
 
-// Test route required by assignment
 app.get("/", (req, res) => {
   res.json({
     message: "API Listening",
     term: "Winter 2026",
     student: "Harsh Prajapati",
-    learnID: "YOUR_LEARN_ID_HERE"
+    learnID: "hnprajapati2"
   });
 });
 
-// POST /api/sites - add new site
 app.post("/api/sites", async (req, res) => {
   try {
     const newSite = await dataService.addNewSite(req.body);
@@ -44,7 +42,6 @@ app.post("/api/sites", async (req, res) => {
   }
 });
 
-// GET /api/sites - paging + optional filters
 app.get("/api/sites", async (req, res) => {
   try {
     const { page, perPage, name, description, year, town, provinceOrTerritoryCode } = req.query;
@@ -65,7 +62,6 @@ app.get("/api/sites", async (req, res) => {
   }
 });
 
-// GET /api/sites/:id
 app.get("/api/sites/:id", async (req, res) => {
   try {
     const site = await dataService.getSiteById(req.params.id);
@@ -80,7 +76,6 @@ app.get("/api/sites/:id", async (req, res) => {
   }
 });
 
-// PUT /api/sites/:id
 app.put("/api/sites/:id", async (req, res) => {
   try {
     const result = await dataService.updateSiteById(req.body, req.params.id);
@@ -95,7 +90,6 @@ app.put("/api/sites/:id", async (req, res) => {
   }
 });
 
-// DELETE /api/sites/:id
 app.delete("/api/sites/:id", async (req, res) => {
   try {
     const result = await dataService.deleteSiteById(req.params.id);
@@ -110,18 +104,23 @@ app.delete("/api/sites/:id", async (req, res) => {
   }
 });
 
-// 404 middleware (must be after all routes)
 app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
 });
 
-// Initialize database, then start server
+
 dataService.initialize()
   .then(() => {
-    app.listen(HTTP_PORT, () => {
-      console.log(`Server listening on: ${HTTP_PORT}`);
-    });
+    console.log("Data service initialized");
   })
   .catch((err) => {
-    console.log(err);
+    console.log("Data service init error:", err);
   });
+
+module.exports = app;
+
+if (!process.env.VERCEL) {
+  app.listen(HTTP_PORT, () => {
+    console.log(`Server listening on: ${HTTP_PORT}`);
+  });
+}
