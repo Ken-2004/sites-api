@@ -4,35 +4,27 @@ const siteSchema = require("./modules/siteSchema");
 let Site = null;
 let initPromise = null;
 
-function ensureInitialized() {
-  if (Site) return Promise.resolve();
+async function ensureInitialized() {
+  if (Site) return;
 
   if (!initPromise) {
     const mongoDBConnectionString = process.env.MONGO_URL;
 
     if (!mongoDBConnectionString) {
-      return Promise.reject(
-        new Error(
-          "MONGO_URL is missing. Make sure it exists in .env (local) and Vercel Environment Variables."
-        )
-      );
+      throw new Error("MONGO_URL is required to initialize the site service");
     }
 
-    initPromise = new Promise((resolve, reject) => {
-      const db = mongoose.createConnection(mongoDBConnectionString);
-
-      db.on("error", (err) => {
-        reject(err);
-      });
-
-      db.once("open", () => {
+    initPromise = mongoose.createConnection(mongoDBConnectionString).asPromise()
+      .then((db) => {
         Site = db.model("sites", siteSchema);
-        resolve();
+      })
+      .catch((error) => {
+        initPromise = null;
+        throw error;
       });
-    });
   }
 
-  return initPromise;
+  await initPromise;
 }
 
 module.exports.initialize = function () {
@@ -75,17 +67,11 @@ module.exports.getAllSites = async function (
     findBy = { ...findBy, "provinceOrTerritory.code": provinceOrTerritoryCode };
   }
 
-  if (+page && +perPage) {
-    return Site.find(findBy)
-      .sort({ siteName: 1 })
-      .skip((page - 1) * +perPage)
-      .limit(+perPage)
-      .exec();
-  }
-
-  return Promise.reject(
-    new Error("page and perPage query parameters must be valid numbers")
-  );
+  return Site.find(findBy)
+    .sort({ siteName: 1 })
+    .skip((Number(page) - 1) * Number(perPage))
+    .limit(Number(perPage))
+    .exec();
 };
 
 module.exports.getSiteById = async function (id) {
@@ -95,7 +81,7 @@ module.exports.getSiteById = async function (id) {
 
 module.exports.updateSiteById = async function (data, id) {
   await ensureInitialized();
-  return Site.updateOne({ _id: id }, { $set: data }).exec();
+  return Site.updateOne({ _id: id }, { $set: data }, { runValidators: true }).exec();
 };
 
 module.exports.deleteSiteById = async function (id) {
