@@ -1,9 +1,23 @@
 # Sites API
 
-A REST API for browsing and managing records about sites, with account-based
+A REST API for National Historic Sites Explorer, supporting site discovery
+and record management with account-based
 authentication and per-user favourites. Public routes support site discovery;
 JSON Web Token (JWT) authentication protects site mutations and favourite
 management.
+
+## Full-stack project
+
+National Historic Sites Explorer is one full-stack portfolio project maintained
+in two repositories:
+
+- **Frontend:** Next.js / React — [National Historic Sites Explorer](https://github.com/Ken-2004/national-historic-sites-explorer).
+- **Backend/API:** Node.js / Express / MongoDB — this repository.
+
+This API is the backend for the frontend linked above. For local integration,
+set the frontend's `NEXT_PUBLIC_API_URL` to `http://localhost:8080/api`.
+The base URL includes `/api`; the frontend appends paths such as `/sites`
+and `/user/login`.
 
 ## Features
 
