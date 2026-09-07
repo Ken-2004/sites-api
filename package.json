@@ -1,10 +1,14 @@
 {
   "name": "sites-api",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "REST API for browsing and managing sites with JWT authentication",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "test": "jest --runInBand",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage --runInBand",
+    "test:smoke": "jest --runInBand tests/smoke.test.js"
   },
   "keywords": [],
   "author": "",
@@ -19,5 +23,18 @@
     "mongoose": "^9.1.5",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1"
+  },
+  "devDependencies": {
+    "jest": "^30.2.0",
+    "supertest": "^7.1.4"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "clearMocks": true,
+    "collectCoverageFrom": [
+      "app.js",
+      "config.js",
+      "middleware/**/*.js"
+    ]
   }
 }

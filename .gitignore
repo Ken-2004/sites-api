@@ -1,3 +1,11 @@
-node_modules
+node_modules/
 .env
-Usershp382AppDataRoamingnpm-cache
+.env.*
+!.env.example
+npm-debug.log*
+*.log
+coverage/
+.vercel/
+.npm-cache/
+.DS_Store
+Thumbs.db
