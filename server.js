@@ -1,17 +1,3 @@
-/********************************************************************************
-*  WEB422 – Assignment 3
-*
-*  I declare that this assignment is my own work in accordance with Seneca's
-*  Academic Integrity Policy:
-*
-*  https://www.senecapolytechnic.ca/about/policies/academic-integrity-policy.html
-*
-*  Name: Harsh Prajapati Student ID: 150763233 Date: 10-04-2026
-*
-*  Published URL (of the API) on Vercel: https://sites-api-five.vercel.app/
-*
-********************************************************************************/
-
 require("dotenv").config();
 
 const express = require("express");
@@ -51,12 +37,7 @@ app.use(express.json());
 app.use(passport.initialize());
 
 app.get("/", (req, res) => {
-  res.json({
-    message: "A3 -- Secured API Listening",
-    term: "Winter 2026",
-    student: "Harsh Prajapati",
-    learnID: "hnprajapati2"
-  });
+  res.json({ message: "Sites API is running" });
 });
 
 // --- User routes ---
